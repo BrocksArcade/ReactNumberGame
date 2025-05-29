@@ -19,15 +19,19 @@ export default function DateFactComponent({ url, urlsuffix, title, className, on
     const monthRef = useRef(null);
 
     useEffect(() => {
-        if (isAnimationPlaying==false) {
+        const timerhandler = setTimeout(() => {
             doAPICall();
-        } else {
-            setTimeout(() => {
-                //rechecking if animation is still playing if yes then we will arroive here again if not then we will call API
-                doAPICall();
-            }, 30);
-        }
-//isanimation plsyaing is not here because we are chaning isAnimationPlaying inside doAPICall to true
+        }, 300);
+        return () => clearTimeout(timerhandler);
+        // if (isAnimationPlaying == false) {
+        //     doAPICall();
+        // } else {
+        //     setTimeout(() => {
+        //         //rechecking if animation is still playing if yes then we will arroive here again if not then we will call API
+        //         doAPICall();
+        //     }, 30);
+        // }
+        //isanimation plsyaing is not here because we are chaning isAnimationPlaying inside doAPICall to true
 
     }, [monthinput, dayinp]);
     return (<>
@@ -35,14 +39,14 @@ export default function DateFactComponent({ url, urlsuffix, title, className, on
             <label className="DisplayTitle  my-2">{title}</label>
             <FactComponent classname={""} factAnimationControls={factAnimationControls} factString={factString} setIsPlaying={(val) => setIsPlaying(val)} />
             <div className="d-flex flex-row justify-content-center align-items-center gap-1">
-                <NumericInput ref={dateRef} title={"Day"} CustomInputValue={dayinp} min={0} max={31} onValueChanged={(v) => {
+                <NumericInput ref={dateRef} title={"Day"} onFieldCleared={() => SetfactString("Enter A Number in Purple Box to see fact about it")} CustomInputValue={dayinp} min={0} max={31} onValueChanged={(v) => {
                     if (isInputRefValid());
                     { setDayInp(v); }
                 }} shouldDisableInput={false} onErrorCatch={(e) => { setErrorMessage(e); }} />
             </div>
             <RandomNumberButton className={"p-3"} onNumberGenerated={handleRandomNumberRecived} />
             <div className="d-flex flex-row justify-content-center align-items-center gap-1">
-                <NumericInput title={"Month"} ref={monthRef} CustomInputValue={monthinput} min={0} max={12} onValueChanged={(v) => {
+                <NumericInput title={"Month"} onFieldCleared={() => SetfactString("Enter A Number in Purple Box to see fact about it")} ref={monthRef} CustomInputValue={monthinput} min={0} max={12} onValueChanged={(v) => {
                     if (isInputRefValid());
                     { setMonthInp(v); }
                 }} shouldDisableInput={false} onErrorCatch={(e) => { setErrorMessage(e); }} />
@@ -57,27 +61,35 @@ export default function DateFactComponent({ url, urlsuffix, title, className, on
     function doAPICall() {
 
         if (monthinput > 0 && dayinp > 0 && dateRef.current.value && monthRef.current.value) {
-            factAnimationControls.mount()
-            factAnimationControls.start("onFactFinding");
-            console.log(url + '/' + monthinput + '/' + dayinp + urlsuffix);
 
-            fetch(url + monthinput + '/' + dayinp + urlsuffix).then((response) => {
-                response.text().then((fact) => {
-                    let valu = String(fact).trim();
-                    if (valu.indexOf("boring") > 0 || valu.indexOf("unremarkable") > 0 || valu.indexOf("missing a fact") > 0 || valu.indexOf("uninteresting") > 0) {
-                        let fallbackfact = "fact not found, try another number";
-                        SetfactString(fallbackfact);
-                    }
-                    else {
-                        SetfactString(fact);
-                    }
+            if (monthinput == 2 && dayinp > 29) {
+                setErrorMessage("Febraury Cannot have more than 29 Days");
+                // alert("Error");
+            }
+            else {  // factAnimationControls.mount()
+                factAnimationControls.start("onFactFinding");
+                console.log(url + '/' + monthinput + '/' + dayinp + urlsuffix);
 
+                fetch(url + monthinput + '/' + dayinp + urlsuffix).then((response) => {
+                    response.text().then((fact) => {
+                        let valu = String(fact).trim();
+                        if (valu.indexOf("boring") > 0 || valu.indexOf("unremarkable") > 0 || valu.indexOf("missing a fact") > 0 || valu.indexOf("uninteresting") > 0) {
+                            let fallbackfact = "fact not found, try another number";
+                            SetfactString(fallbackfact);
+                        }
+                        else {
+                            SetfactString(fact);
+                        }
+
+                    });
                 });
-            });
+            }
         }
         else if (!(isNaN(monthinput) && isNaN(dayinp))) {
             //this is fallback in case value was Zero but set through Numbers or Random Number
-            setErrorMessage("Day and Month cannot be empty or zero");
+            if(!dateRef){setErrorMessage("Day cannot be empty or zero");}
+            else if(!monthRef){setErrorMessage("Month cannot be empty or zero");}
+            // setErrorMessage(errormsg);
         }
 
     }

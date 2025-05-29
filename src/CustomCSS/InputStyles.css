@@ -24,7 +24,9 @@
 }
 
 .inputclass {
-    background-color: transparent;
+    background-color: rgb(166, 0, 255);
+    border-radius: 50px;
+    box-shadow: 0px 0px 5px white;
     border: none;
     text-align: center;
     font-family: HowdyKoala;
@@ -32,6 +34,10 @@
     text-shadow: 0px 0px 15px rgb(184, 30, 255);
     text-decoration: solid;
     font-size: 12pt;
+}
+
+.inputclass:hover:focus {
+    box-shadow: 0px 0px 10px rgb(255, 255, 255);
 }
 
 .InputFrame {

@@ -5,7 +5,7 @@ import { RandomNumberButton } from "../basicComponents/RandomNumberGeneratorComp
 
 
 
-export default function NumericInput({ onValueChanged, min, max, title, onErrorCatch, CustomInputValue, shouldDisableInput,ref }) {
+export default function NumericInput({ onValueChanged, min, max, title, onErrorCatch, onFieldCleared, CustomInputValue, shouldDisableInput, ref }) {
 
     const [inpvalue, SetInpValue] = useState(CustomInputValue);
     useEffect(() => {
@@ -19,24 +19,30 @@ export default function NumericInput({ onValueChanged, min, max, title, onErrorC
     function validateAndSubmitInput(e) {
         {
 
+
             // if (String(e).length>0) { e = Number(e).toString(3); }
-            e = e && String(e).replaceAll("-", " ").trim();
+            // e = e && String(e).replace("-", " ").trim();
+
+            e = e && String(e).replace(/[a-zA-Z@#$%^&*()_+~`]/g, "").trim();
+
             e = String(e).length >= 4 ? inpvalue : e;
             if (Number(e) >= min) {
                 // e=Number(e).toString();
                 const loc_val = parseInt(e);
                 if (loc_val >= 0) {
-                    if (loc_val <= max) {
+                    if (Number(e) <= max) {
                         onErrorCatch("")//clear error
                         SetInpValue(e);
                         onValueChanged(e);
                     }
                     else {
+                        SetInpValue(inpvalue);
                         onErrorCatch("Value should be less than " + max);
                     }
                 }
                 else {
                     SetInpValue();
+                    onFieldCleared();
                     onErrorCatch("Value cannot be empty or less than " + min);
                 }
             }
@@ -59,7 +65,10 @@ export default function NumericInput({ onValueChanged, min, max, title, onErrorC
                 SetInpValue(1);
                 validateAndSubmitInput(1);
             }
-            else { onErrorCatch("Max Value Reached"); }
+            else {
+                SetInpValue(inpvalue);
+                onErrorCatch("Value should be less than " + max);
+            }
             // validateAndSubmitInput(e);}
         }
     }
@@ -76,7 +85,7 @@ export default function NumericInput({ onValueChanged, min, max, title, onErrorC
                 SetInpValue(min); validateAndSubmitInput(min);
             }
             else {
-                onErrorCatch("Min Value Reached");
+                onErrorCatch("Value cannot be empty or less than " + min);
             }
         }
     }
@@ -91,11 +100,21 @@ export default function NumericInput({ onValueChanged, min, max, title, onErrorC
             {title && <label className="InputLabel text-center align-self-center">{title}</label>}
             <div className="d-flex col flex-row justify-content-center align-items-center text-center InputFrame my-3 py-2">
                 <button type="button" className="btn-ripple  but_inputchanger col text-center align-self-center m-2 py-2" onClick={() => decrementValue()}>-</button>
-                <input type="number" ref={ref} max={max} maxLength={3} disabled={shouldDisableInput} className="inputclass col w-50" value={inpvalue} step={1} onInput={(value)=>console.log("Input changed" + value)
-                } onChange={(value) => {
-                    validateAndSubmitInput(value.target.value);
-                   
-                }}
+                <input type="text" ref={ref} max={max} maxLength={3} disabled={shouldDisableInput} className="inputclass col w-50" value={inpvalue} step={1}
+                    onChange={(value) => {
+
+                        let e = String(value.target.value)
+                            .replace(/[a-zA-Z@#$%^&*()_+~`]/g, "")  
+                            .trim();
+                        if (isNaN(e) || e == undefined || e==="") {
+                            SetInpValue("");
+                            // alert("Value replaced");
+                        }
+                        else {
+                            
+                            validateAndSubmitInput(e);
+                        }
+                    }}
 
 
                 />
