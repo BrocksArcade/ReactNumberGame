@@ -15,36 +15,52 @@ export default function NumericFactComponent({ url, urlsuffix, title, className 
   const [isAnimationPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    if (!isAnimationPlaying) {
+    // doAPICallWAnimationCheck(300);
+    if (isAnimationPlaying === false) {
       doAPICall();
     }
     else {
-    
       setTimeout(() => {
         //rechecking if animation is still playing if yes then we will arroive here again if not then we will call API
+        // doAPICallWAnimationCheck();
+        // doAPICallWAnimationCheck(300)
         doAPICall();
-      }, 100);
+
+      }, 20);
     }
-  }, [mathInpNum, RandomNumber]);
+  }, [mathInpNum]);
 
   return (<>
     <motion.div animate={CommonAnims.popUpSpring} className={className + " GameFrame d-flex justify-content-center text-center align-items-center"}>
       <label className="DisplayTitle text-center my-1 px-5">{title}</label>
       <FactComponent factAnimationControls={factAnimationControls} factString={factString}
         setIsPlaying={(val) => setIsPlaying(val)} />
-      <NumericInput className="row my-1" title={""} min={0} max={9999} onValueChanged={SetMathInpNum} shouldDisableInput={false} CustomInputValue={mathInpNum
+      <NumericInput className="row my-1" title={""} min={0} max={9999} onValueChanged={(e) => {
+        if (isAnimationPlaying === false) { SetMathInpNum(e) }
+      }} shouldDisableInput={false} CustomInputValue={mathInpNum
         // RandomNumber
 
       } onErrorCatch={(e) => setErrorMessage(e)}></NumericInput>
 
       <RandomNumberButton className={"mb-3"} min={0} max={99} onNumberGenerated={(num) => {
-        if (!isAnimationPlaying) {
-          SetMathInpNum(num);
-          // setRandomNumber(getRandomNumberInRange(0,99))
-        }
+
+        SetMathInpNum(num);
+        // setRandomNumber(getRandomNumberInRange(0,99))
+
       }} />
       {errormsg && <label className="ErrorMessage">{errormsg}</label>}
     </motion.div ></>)
+
+  function doAPICallWAnimationCheck(delay=300) {
+    if (isAnimationPlaying === false) {
+      doAPICall();
+      return;
+    }else{setTimeout(() => {
+      doAPICallWAnimationCheck(delay);
+      return;
+    }, delay);}
+
+  }
 
   function doAPICall() {
     if (mathInpNum >= 0) {

@@ -19,16 +19,15 @@ export default function DateFactComponent({ url, urlsuffix, title, className, on
     const monthRef = useRef(null);
 
     useEffect(() => {
-        if (!isAnimationPlaying) {
+        if (isAnimationPlaying==false) {
             doAPICall();
         } else {
-
             setTimeout(() => {
                 //rechecking if animation is still playing if yes then we will arroive here again if not then we will call API
                 doAPICall();
-            }, 100);
+            }, 30);
         }
-
+//isanimation plsyaing is not here because we are chaning isAnimationPlaying inside doAPICall to true
 
     }, [monthinput, dayinp]);
     return (<>
@@ -58,10 +57,22 @@ export default function DateFactComponent({ url, urlsuffix, title, className, on
     function doAPICall() {
 
         if (monthinput > 0 && dayinp > 0 && dateRef.current.value && monthRef.current.value) {
+            factAnimationControls.mount()
             factAnimationControls.start("onFactFinding");
             console.log(url + '/' + monthinput + '/' + dayinp + urlsuffix);
+
             fetch(url + monthinput + '/' + dayinp + urlsuffix).then((response) => {
-                response.text().then((valu) => SetfactString(valu));
+                response.text().then((fact) => {
+                    let valu = String(fact).trim();
+                    if (valu.indexOf("boring") > 0 || valu.indexOf("unremarkable") > 0 || valu.indexOf("missing a fact") > 0 || valu.indexOf("uninteresting") > 0) {
+                        let fallbackfact = "fact not found, try another number";
+                        SetfactString(fallbackfact);
+                    }
+                    else {
+                        SetfactString(fact);
+                    }
+
+                });
             });
         }
         else if (!(isNaN(monthinput) && isNaN(dayinp))) {
