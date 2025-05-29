@@ -1,0 +1,173 @@
+    .App {
+        text-align: center;
+    }
+    
+    @font-face {
+        font-family: 'Howdykoala';
+        src: url('./fonts/howdy_koala/Howdy\ Koala.ttf');
+    }
+    /* for removing those small box */
+    
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    /* outline removing */
+    
+    input:focus {
+        outline: none;
+        border: none;
+        box-shadow: none;
+    }
+    
+    .AnimatedBackground {
+        position: absolute;
+        /* top: 0; */
+        /* left: 0; */
+        width: 100%;
+        height: 150%;
+        /* transition-delay: 1ms; */
+        /* transition: ease; */
+        /* transition-repeat: infinity; */
+        background-image: url('../public/transparent_numbers.png');
+        background-repeat: repeat;
+        /* background-size: cover; */
+        z-index: 0;
+        background-color: rgb(254, 185, 58);
+        pointer-events: none;
+    }
+    
+    .Background {
+        position: relative;
+        overflow: scroll;
+        background-color: transparent;
+        /* height: fit-content; */
+        min-height: max-content;
+        scrollbar-width: none;
+        z-index: 1;
+    }
+    
+    .MainFrame {
+        background-color: white;
+        box-shadow: -8px -2px 15px rgba(0, 0, 0, 0.67);
+        border: black;
+        /* overflow-y: scroll; */
+        scrollbar-width: 2px;
+        scroll-behavior: smooth;
+        max-height: min-content;
+        max-width: fit-content;
+        min-width: 75vw;
+    }
+    
+    .BigHeading {
+        font-family: HowdyKoala;
+        /* outline: auto; */
+        font-size: clamp(1.5rem, 5vw, 3rem);
+        /* scales with screen size */
+        color: rgb(254, 185, 58);
+        outline: auto;
+        background-color: white;
+        border: dashed;
+        border-color: #ffae00;
+        border-width: 6px;
+        border-radius: 20px;
+        text-shadow: -5px 1px 1px rgba(0, 0, 0, 0.665);
+        box-shadow: -8px -2px 15px rgba(0, 0, 0, 0.67);
+    }
+    
+    .FactStyle {
+        font-family: HowdyKoala;
+        align-items: center;
+        padding: 8px;
+        justify-content: center;
+        align-self: center;
+        align-content: center;
+        font-size: medium;
+        /* position: relative; */
+        color: rgb(140, 58, 254);
+        outline: auto;
+        background-color: white;
+        border: dashed;
+        border-color: #ff004c;
+        text-align: center;
+        border-width: 6px;
+        border-spacing: 5px;
+        border-radius: 20px;
+        box-shadow: -5px -2px 5px rgba(0, 0, 0, 0.67);
+        /* overflow-wrap: break-word; */
+        overflow: scroll;
+        width: 20rem;
+        word-wrap: break-word;
+        max-height: 50%;
+        scrollbar-width: none;
+    }
+    
+    .GameFrame {
+        /* box-shadow: 0px 0px 13px rgba(0, 0, 0, 0.345); */
+        border: solid;
+        text-align: center;
+        background-color: rgb(254, 185, 58);
+        text-align: center;
+        flex-direction: column;
+        border-radius: 20px;
+        scrollbar-width: none;
+        /* padding-left: 11155px; */
+        overflow: scroll;
+        min-width: min-content;
+        width: fit-content;
+        box-shadow: -3px 0px 9px rgba(0, 0, 0, 0.67);
+    }
+    
+    .DisplayTitle {
+        font-family: Howdykoala;
+        text-align: center;
+        justify-items: center;
+        color: white;
+        text-shadow: -2px 3px 5px rgba(0, 0, 0, 0.54);
+        font-size: 24pt;
+        overflow: hidden;
+    }
+    
+    .GameFrame:hover {
+        transition: linear 1s;
+    }
+    
+    .GameFrame::after {
+        padding: 0;
+        margin: 0;
+        opacity: .2;
+        transition: 0s;
+        transform: scale(0, 0);
+    }
+    
+    .btn-ripple {
+        display: inline-block;
+        position: relative;
+        overflow: hidden;
+        transition: all ease-in-out .5s;
+    }
+    
+    .btn-ripple::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 25%;
+        height: 100%;
+        width: 50%;
+        background-color: #000;
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+        transition: all ease-in-out 0.5s;
+        transform: scale(5, 5);
+    }
+    
+    .btn-ripple:active::after {
+        padding: 0;
+        margin: 0;
+        opacity: .2;
+        transition: 0s;
+        transform: scale(0, 0);
+    }

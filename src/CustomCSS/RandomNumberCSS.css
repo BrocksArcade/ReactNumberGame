@@ -1,0 +1,25 @@
+.RandomNumberClass {
+    background-color: #ff00b7;
+    color: white;
+    font-size: 1rem;
+    padding: 8pt;
+    font-family: HowdyKoala;
+    text-align: center;
+    text-shadow: 0px 0px 5px rgb(255, 255, 255);
+    border: none;
+    text-align: center;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    align-content: center;
+    border-color: transparent;
+    border-radius: 20px;
+    box-shadow: -1px 2px 10px rgba(15, 244, 248, 0.654);
+}
+
+.RandomNumberClass:hover {
+    scale: 1.1;
+    background-color: #c300ff;
+    box-shadow: -1px 5px 10px rgb(255, 0, 234);
+    transition: ease-in-out 0.5s;
+}

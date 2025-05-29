@@ -1,0 +1,68 @@
+.but_inputchanger {
+    background-color: #7b00ff;
+    color: white;
+    font-size: 10pt;
+    /* font-family: HowdyKoala; */
+    text-align: center;
+    text-shadow: 0px 0px 5px rgb(255, 255, 255);
+    font-size: x-large;
+    font-weight: bold;
+    text-align: center;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    align-content: center;
+    border: none;
+    border-color: transparent;
+    border-radius: 30px;
+    box-shadow: -1px 2px 10px rgba(0, 251, 255, 0.654);
+}
+
+.but_inputchanger:hover {
+    box-shadow: -1px 2px 10px rgba(254, 245, 6, 0.767);
+    transition: linear 0.1s;
+}
+
+.inputclass {
+    background-color: transparent;
+    border: none;
+    text-align: center;
+    font-family: HowdyKoala;
+    color: white;
+    text-shadow: 0px 0px 15px rgb(184, 30, 255);
+    text-decoration: solid;
+    font-size: 12pt;
+}
+
+.InputFrame {
+    background-color: #9a34ff;
+    border: solid;
+    border-color: transparent;
+    border-radius: 50px;
+    box-shadow: -3px 2px 9px rgba(0, 0, 0, 0.67);
+}
+
+.InputFrame:hover {
+    box-shadow: -3px 3px 10px rgba(183, 1, 255, 0.878);
+    transition: linear 0s;
+}
+
+.InputLabel {
+    background-color: transparent;
+    border: none;
+    text-align: center;
+    font-family: HowdyKoala;
+    color: white;
+    text-shadow: 0px 0px 15px rgb(184, 30, 255);
+    text-decoration: solid;
+    font-size: clamp(1rem, 1.5rem, 2rem);
+}
+
+.ErrorMessage {
+    font-family: HowdyKoala;
+    font-size: 1rem;
+    color: white;
+    text-shadow: 0px 0px 8px black;
+    padding: auto;
+    padding-bottom: 8px;
+}

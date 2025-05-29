@@ -1,0 +1,105 @@
+import { useAnimationControls } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import "../CustomCSS/InputStyles.css";
+import NumericInput from "../inputstypes/NumericInput";
+import { FactComponent } from "./FactComponent";
+import { RandomNumberButton } from "./RandomNumberGeneratorComponent";
+import { getRandomNumberInRange } from "./UtilityFunc";
+
+export default function DateFactComponent({ url, urlsuffix, title, className, onErrorCatch }) {
+
+    const [factString, SetfactString] = useState('Enter Day and Month in below purple boxes');
+    const [monthinput, setMonthInp] = useState();
+    const [dayinp, setDayInp] = useState();
+    const [errormsg, setErrorMessage] = useState("");
+    const factAnimationControls = useAnimationControls();
+    const [isAnimationPlaying, setIsPlaying] = useState(false);
+
+    const dateRef = useRef(null);
+    const monthRef = useRef(null);
+
+    useEffect(() => {
+        if (!isAnimationPlaying) {
+            doAPICall();
+        } else {
+
+            setTimeout(() => {
+                //rechecking if animation is still playing if yes then we will arroive here again if not then we will call API
+                doAPICall();
+            }, 100);
+        }
+
+
+    }, [monthinput, dayinp]);
+    return (<>
+        <div className={className + ' GameFrame d-flex flex-column justify-content-center justify-items-center text-center align-items-center gap-1'}>
+            <label className="DisplayTitle  my-2">{title}</label>
+            <FactComponent classname={""} factAnimationControls={factAnimationControls} factString={factString} setIsPlaying={(val) => setIsPlaying(val)} />
+            <div className="d-flex flex-row justify-content-center align-items-center gap-1">
+                <NumericInput ref={dateRef} title={"Day"} CustomInputValue={dayinp} min={0} max={31} onValueChanged={(v) => {
+                    if (isInputRefValid());
+                    { setDayInp(v); }
+                }} shouldDisableInput={false} onErrorCatch={(e) => { setErrorMessage(e); }} />
+            </div>
+            <RandomNumberButton className={"p-3"} onNumberGenerated={handleRandomNumberRecived} />
+            <div className="d-flex flex-row justify-content-center align-items-center gap-1">
+                <NumericInput title={"Month"} ref={monthRef} CustomInputValue={monthinput} min={0} max={12} onValueChanged={(v) => {
+                    if (isInputRefValid());
+                    { setMonthInp(v); }
+                }} shouldDisableInput={false} onErrorCatch={(e) => { setErrorMessage(e); }} />
+
+            </div>
+            {/* <RandomNumberButton className={"mb-3"} min={0} max={12} onNumberGenerated={hand} /> */}
+            {errormsg && <label className="ErrorMessage">{errormsg}</label>}
+        </div>
+
+    </>)
+
+    function doAPICall() {
+
+        if (monthinput > 0 && dayinp > 0 && dateRef.current.value && monthRef.current.value) {
+            factAnimationControls.start("onFactFinding");
+            console.log(url + '/' + monthinput + '/' + dayinp + urlsuffix);
+            fetch(url + monthinput + '/' + dayinp + urlsuffix).then((response) => {
+                response.text().then((valu) => SetfactString(valu));
+            });
+        }
+        else if (!(isNaN(monthinput) && isNaN(dayinp))) {
+            //this is fallback in case value was Zero but set through Numbers or Random Number
+            setErrorMessage("Day and Month cannot be empty or zero");
+        }
+
+    }
+
+    function handleRandomNumberRecived() {
+
+        if (!isAnimationPlaying) {
+            setDayInp(getRandomNumberInRange(1, 31));
+            setMonthInp(getRandomNumberInRange(1, 12));
+        }
+    }
+    function isInputRefValid() {
+        console.log("Day Value Ref" + dateRef.current.value);
+        console.log("month Value Ref" + monthRef.current.value);
+
+        if (dateRef.current.value && dateRef.current.value !== NaN && dateRef.current.value !== undefined && dateRef.current.value !== null && dateRef.current.value !== 0) {
+            if (monthRef.current.value && monthRef.current.value !== NaN && monthRef.current.value !== undefined && monthRef.current.value !== null && monthRef.current.value !== 0) {
+                return true;
+            }
+            else {
+                setErrorMessage("Month cannot be empty or zero");
+                return false;
+            }
+
+        }
+        else {
+            setErrorMessage("Day cannot be empty or zero");
+            return false;
+        }
+
+    }
+
+
+
+
+}
